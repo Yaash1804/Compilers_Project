@@ -37,16 +37,36 @@ class TreeTransformer(Transformer):
     def paren(self, children):
         return children[0]
 
-# Parse the input expression
+# Parse the input expression and return the parse tree
 def parse_expression(expression):
     parser = Lark(grammar, parser='lalr', transformer=TreeTransformer())
     try:
         parse_tree = parser.parse(expression)
-        parse_tree.pretty_print()  # Print tree in terminal
-        parse_tree.draw()  # Draw tree using NLTK GUI
+        return parse_tree  # Return the parse tree
     except Exception as e:
         print("Syntax Error:", e)
+        return None
+
+# Function to perform inorder traversal
+def inorder_traversal(tree, result):
+    if isinstance(tree, Tree):
+        if len(tree) == 2:  # Operator nodes (binary operations)
+            inorder_traversal(tree[0], result)  # Left subtree
+            result.append(tree.label())  # Root (operator)
+            inorder_traversal(tree[1], result)  # Right subtree
+        else:  # Leaf nodes (numbers)
+            result.append(tree.label())
 
 # Example usage
 expr = "6 + 9 - 9 + (51*9)/8"
-parse_expression(expr)
+parse_tree = parse_expression(expr)
+
+if parse_tree:
+    print("Parse Tree:")
+    parse_tree.pretty_print()
+
+    # Store inorder traversal
+    inorder_result = []
+    inorder_traversal(parse_tree, inorder_result)
+
+    print("Inorder Traversal:", inorder_result)
