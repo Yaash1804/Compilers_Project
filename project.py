@@ -33,7 +33,7 @@ class TreeTransformer(Transformer):
         return Tree('/', children)
     
     def number(self, children):
-        return Tree(children[0], [])
+        return Tree(str(children[0]), [])  # Convert token to string
     
     def paren(self, children):
         return children[0]
@@ -48,20 +48,10 @@ def parse_expression(expression):
         print("Syntax Error:", e)
         return None
 
-# Function to perform inorder traversal
-# def inorder_traversal(tree, result):
-#     if isinstance(tree, Tree):
-#         if len(tree) == 2:  # Operator nodes (binary operations)
-#             inorder_traversal(tree[0], result)  # Left subtree
-#             result.append(tree.label())  # Root (operator)
-#             inorder_traversal(tree[1], result)  # Right subtree
-#         else:  # Leaf nodes (numbers)
-#             result.append(tree.label()[0])
-
 # Function to perform preorder traversal
 def preorder_traversal(tree, result):
     if isinstance(tree, Tree):
-        result.append(tree.label()[0])  # Root (operator or number)
+        result.append(tree.label())  # Root (operator or number)
         for child in tree:  # Recursively visit children
             preorder_traversal(child, result)
 
@@ -74,7 +64,7 @@ def level_order_traversal(tree, result):
     
     while queue:
         node = queue.popleft()  # Dequeue the front element
-        result.append(node.label()[0])  # Process the node
+        result.append(node.label())  # Store the label
         
         # Enqueue all children (left to right)
         for child in node:
@@ -88,11 +78,6 @@ parse_tree = parse_expression(expr)
 if parse_tree:
     print("Parse Tree:")
     parse_tree.pretty_print()
-
-    # Store inorder traversal
-    # inorder_result = []
-    # inorder_traversal(parse_tree, inorder_result)
-    # print("Inorder Traversal:", inorder_result)
 
     # Store preorder traversal
     preorder_result = []
