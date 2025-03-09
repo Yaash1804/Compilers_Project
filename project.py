@@ -51,11 +51,18 @@ def parse_expression(expression):
 def inorder_traversal(tree, result):
     if isinstance(tree, Tree):
         if len(tree) == 2:  # Operator nodes (binary operations)
-            inorder_traversal(tree[0], result)  # Left subtree
+            inorder_traversal(tree[0], result)  # Left subtreec
             result.append(tree.label())  # Root (operator)
             inorder_traversal(tree[1], result)  # Right subtree
         else:  # Leaf nodes (numbers)
-            result.append(tree.label())
+            result.append(tree.label()[0])
+
+# Function to perform preorder traversal
+def preorder_traversal(tree, result):
+    if isinstance(tree, Tree):
+        result.append(tree.label()[0])  # Root (operator or number)
+        for child in tree:  # Recursively visit children
+            preorder_traversal(child, result)
 
 # Example usage
 expr = "6 + 9 - 9 + (51*9)/8"
@@ -68,5 +75,9 @@ if parse_tree:
     # Store inorder traversal
     inorder_result = []
     inorder_traversal(parse_tree, inorder_result)
-
     print("Inorder Traversal:", inorder_result)
+
+    # Store preorder traversal
+    preorder_result = []
+    preorder_traversal(parse_tree, preorder_result)
+    print("Preorder Traversal:", preorder_result)
